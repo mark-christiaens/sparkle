@@ -51,15 +51,8 @@ def empty : SimMemory :=
 
 /-- Load memory from list of words -/
 def fromList (words : List MemWord) : SimMemory :=
-  let arr := Array.mkArray memorySize 0
-  let loaded := words.foldl (fun (acc : Array MemWord × Nat) w =>
-    let (arr, idx) := acc
-    if idx < memorySize then
-      (arr.set! idx w, idx + 1)
-    else
-      (arr, idx)
-  ) (arr, 0)
-  { data := loaded.1 }
+  let wordsArr := words.toArray
+  { data := Array.ofFn (fun (i : Fin memorySize) => wordsArr.getD i.val 0) }
 
 /-- Read from memory (synchronous) -/
 def read (mem : SimMemory) (addr : MemAddr) : MemWord :=

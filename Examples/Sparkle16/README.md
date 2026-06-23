@@ -134,7 +134,7 @@ Complete CPU implementation integrating all components:
 ```lean
 structure CPUState where
   pc : Word                    -- Program counter
-  regs : Fin 8 → Word         -- Register file (functional)
+  regs : RegId → Word         -- Register file (functional)
   phase : Phase                -- Current execution phase
   instr : Option Instruction   -- Currently decoded instruction
   memData : Word               -- Data from memory load

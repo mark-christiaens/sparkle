@@ -10,43 +10,24 @@ import Sparkle.Verification.ISAProps
 open Sparkle.Verification.ISAProps
 open Sparkle.Verification.ISAProps.Instruction
 
--- Test: Opcode encoding/decoding roundtrip
-example : Opcode.fromBitVec (Opcode.toBitVec Opcode.ADD) = some Opcode.ADD :=
-  opcode_encode_decode Opcode.ADD
-
-example : Opcode.fromBitVec (Opcode.toBitVec Opcode.LDI) = some Opcode.LDI :=
-  opcode_encode_decode Opcode.LDI
-
-example : Opcode.fromBitVec (Opcode.toBitVec Opcode.BEQ) = some Opcode.BEQ :=
-  opcode_encode_decode Opcode.BEQ
-
 -- Test: All opcodes roundtrip correctly
 example (opc : Opcode) : Opcode.fromBitVec (Opcode.toBitVec opc) = some opc :=
   opcode_encode_decode opc
 
 -- Test: Instruction classification
-
-example : (Instruction.ADD ⟨1, by omega⟩ ⟨2, by omega⟩ ⟨3, by omega⟩).isBranch = false := rfl
-
-example : (Instruction.BEQ ⟨1, by omega⟩ ⟨2, by omega⟩ 5).isBranch = true := rfl
-
+example : (Instruction.ADD 1 2 3).isBranch = false := rfl
+example : (Instruction.BEQ 1 2 5).isBranch = true := rfl
 example : (Instruction.JMP 0x100).isBranch = true := rfl
 
-example : (Instruction.LDI ⟨1, by omega⟩ 42).writesRegister = true := rfl
-
-example : (Instruction.ADD ⟨1, by omega⟩ ⟨2, by omega⟩ ⟨3, by omega⟩).writesRegister = true := rfl
-
-example : (Instruction.ST ⟨1, by omega⟩ ⟨2, by omega⟩).writesRegister = false := rfl
-
-example : (Instruction.BEQ ⟨1, by omega⟩ ⟨2, by omega⟩ 5).writesRegister = false := rfl
+example : (Instruction.LDI 1 42).writesRegister = true := rfl
+example : (Instruction.ADD 1 2 3).writesRegister = true := rfl
+example : (Instruction.ST 1 2).writesRegister = false := rfl
+example : (Instruction.BEQ 1 2 5).writesRegister = false := rfl
 
 -- Test: Destination register extraction
-
-example : (Instruction.LDI ⟨3, by omega⟩ 42).destReg? = some ⟨3, by omega⟩ := rfl
-
-example : (Instruction.ADD ⟨5, by omega⟩ ⟨1, by omega⟩ ⟨2, by omega⟩).destReg? = some ⟨5, by omega⟩ := rfl
-
-example : (Instruction.ST ⟨1, by omega⟩ ⟨2, by omega⟩).destReg? = none := rfl
+example : (Instruction.LDI 3 42).destReg? = some 3 := rfl
+example : (Instruction.ADD 5 1 2).destReg? = some 5 := rfl
+example : (Instruction.ST 1 2).destReg? = none := rfl
 
 -- Test: Theorems about instruction properties
 
@@ -59,16 +40,6 @@ example (instr : Instruction) (h : instr.writesRegister = true) :
 example (instr : Instruction) (h : instr.isBranch = true) :
     instr.writesRegister = false :=
   branch_no_write instr h
-
--- Specific test: BEQ doesn't write
-example : let instr := Instruction.BEQ ⟨1, by omega⟩ ⟨2, by omega⟩ 5
-          instr.writesRegister = false :=
-  branch_no_write _ rfl
-
--- Specific test: ADD writes and has destination
-example : let instr := Instruction.ADD ⟨3, by omega⟩ ⟨1, by omega⟩ ⟨2, by omega⟩
-          instr.destReg?.isSome = true :=
-  writes_has_dest _ rfl
 
 -- Main: Display test results
 def main : IO Unit := do

@@ -55,10 +55,10 @@ def memoryTest : IO Unit := do
   -- Show first few cycles
   for t in [0:5] do
     IO.println (s!"t={t}: write_en={writeEnable.atTime t}, " ++
-               s!"write_addr=0x{writeAddr.atTime t}, " ++
-               s!"write_data=0x{writeData.atTime t}, " ++
-               s!"read_addr=0x{readAddr.atTime t}, " ++
-               s!"read_data=0x{readData.atTime t}")
+               s!"write_addr={writeAddr.atTime t}, " ++
+               s!"write_data={writeData.atTime t}, " ++
+               s!"read_addr={readAddr.atTime t}, " ++
+               s!"read_data={readData.atTime t}")
 
   IO.println ""
   IO.println "Note: Read data has 1-cycle latency (registered read)"
@@ -109,9 +109,9 @@ def registerFileTest : IO Unit := do
   for t in [0:5] do
     IO.println (s!"t={t}: write_en={writeEnable.atTime t}, " ++
                s!"write_reg=R{writeReg.atTime t}, " ++
-               s!"write_data=0x{writeData.atTime t}, " ++
+               s!"write_data={writeData.atTime t}, " ++
                s!"read_reg=R{readReg.atTime t}, " ++
-               s!"read_data=0x{readData.atTime t}")
+               s!"read_data={readData.atTime t}")
 
 def main : IO Unit := do
   memoryTest

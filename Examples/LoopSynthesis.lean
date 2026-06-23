@@ -13,21 +13,21 @@ open Sparkle.Core.Signal.Signal  -- Open Signal namespace for loop, register, mu
 
 -- A simple counter: cnt = cnt + 1
 -- The 'loop' primitive gives us access to the 'cnt' wire before it's defined.
-def counter {dom} : Signal dom (BitVec 8) :=
+def loopCounter {dom} : Signal dom (BitVec 8) :=
   Signal.loop fun cnt =>
     let next := cnt + 1#8
     -- Register breaks the combinational loop
     register 0#8 next
 
 -- Synthesize and check output
--- #synthesizeVerilog counter
+-- #synthesizeVerilog loopCounter
 
 def main : IO Unit := do
   IO.println "=== Loop Synthesis Test ===\n"
   IO.println "Test: Counter with feedback loop"
-  IO.println "  def counter : Signal := loop fun cnt => register 0 (cnt + 1)"
+  IO.println "  def loopCounter : Signal := loop fun cnt => register 0 (cnt + 1)"
   IO.println ""
-  IO.println "Note: Run #synthesizeVerilog counter interactively to see the output."
+  IO.println "Note: Run #synthesizeVerilog loopCounter interactively to see the output."
   IO.println "Expected IR structure:"
   IO.println "  - wire [7:0] _gen_loop_0;         -- Feedback wire"
   IO.println "  - wire [7:0] _gen_loop_body_1;    -- Result of cnt + 1"

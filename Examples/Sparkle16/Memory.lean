@@ -22,6 +22,7 @@ open Sparkle.Core.Domain
 open Sparkle.IR.Builder
 open Sparkle.IR.AST
 open Sparkle.IR.Type
+open CircuitM
 
 /-- Memory size (256 words) -/
 def memorySize : Nat := 256
@@ -47,7 +48,7 @@ namespace SimMemory
 
 /-- Create empty memory (all zeros) -/
 def empty : SimMemory :=
-  { data := Array.mkArray memorySize 0 }
+  { data := Array.replicate memorySize 0 }
 
 /-- Load memory from list of words -/
 def fromList (words : List MemWord) : SimMemory :=

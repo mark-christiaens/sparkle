@@ -29,7 +29,7 @@ A 16-bit RISC CPU implemented in Sparkle HDL to demonstrate hardware design with
 | `BEQ Rs1, Rs2, Offset` | `110_sss_ttt_ooooooo` | Branch to PC+Offset if Rs1==Rs2 |
 | `JMP Addr` | `111_aaaaaaaaaaaaa` | Jump to absolute address (13-bit) |
 
-**Legend**: `ooo`=opcode, `ddd`=Rd, `sss`=Rs1, `ttt`=Rs2, `iii`=immediate, `ppp`=padding
+**Legend**: `d`=Rd, `s`=Rs1, `t`=Rs2, `i`=immediate, `p`=padding, `o`=offset, `a`=address
 
 ## Components
 

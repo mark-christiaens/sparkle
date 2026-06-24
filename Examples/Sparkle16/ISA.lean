@@ -169,68 +169,68 @@ def encode (instr : Instruction) : Word :=
 -/
 def decode (word : Word) : Option Instruction := do
   -- Extract opcode (bits [15:13])
-  let opcBits := (word >>> 13) &&& 0b111
-  let opc ← Opcode.fromBitVec (opcBits.truncate 3)
+  let opcBits := (word >>> 13).truncate 3
+  let opc ← Opcode.fromBitVec opcBits
 
   match opc with
   | Opcode.LDI =>
       -- Extract fields: [opc(3)] [rd(3)] [imm(8)] [pad(2)]
-      let rdBits := (word >>> 10) &&& 0b111
-      let immBits := (word >>> 2) &&& 0xFF
-      let rd : Fin 8 := ⟨rdBits.toNat, by omega⟩
-      some (LDI rd (immBits.truncate 8))
+      let rdBits := (word >>> 10).truncate 3
+      let immBits := (word >>> 2).truncate 8
+      let rd : RegId := ⟨rdBits.toNat, by omega⟩
+      some (LDI rd immBits)
 
   | Opcode.ADD =>
       -- Extract fields: [opc(3)] [rd(3)] [rs1(3)] [rs2(3)] [pad(4)]
-      let rdBits := (word >>> 10) &&& 0b111
-      let rs1Bits := (word >>> 7) &&& 0b111
-      let rs2Bits := (word >>> 4) &&& 0b111
-      let rd : Fin 8 := ⟨rdBits.toNat, by omega⟩
-      let rs1 : Fin 8 := ⟨rs1Bits.toNat, by omega⟩
-      let rs2 : Fin 8 := ⟨rs2Bits.toNat, by omega⟩
+      let rdBits := (word >>> 10).truncate 3
+      let rs1Bits := (word >>> 7).truncate 3
+      let rs2Bits := (word >>> 4).truncate 3
+      let rd : RegId := ⟨rdBits.toNat, by omega⟩
+      let rs1 : RegId := ⟨rs1Bits.toNat, by omega⟩
+      let rs2 : RegId := ⟨rs2Bits.toNat, by omega⟩
       some (ADD rd rs1 rs2)
 
   | Opcode.SUB =>
-      let rdBits := (word >>> 10) &&& 0b111
-      let rs1Bits := (word >>> 7) &&& 0b111
-      let rs2Bits := (word >>> 4) &&& 0b111
-      let rd : Fin 8 := ⟨rdBits.toNat, by omega⟩
-      let rs1 : Fin 8 := ⟨rs1Bits.toNat, by omega⟩
-      let rs2 : Fin 8 := ⟨rs2Bits.toNat, by omega⟩
+      let rdBits := (word >>> 10).truncate 3
+      let rs1Bits := (word >>> 7).truncate 3
+      let rs2Bits := (word >>> 4).truncate 3
+      let rd : RegId := ⟨rdBits.toNat, by omega⟩
+      let rs1 : RegId := ⟨rs1Bits.toNat, by omega⟩
+      let rs2 : RegId := ⟨rs2Bits.toNat, by omega⟩
       some (SUB rd rs1 rs2)
 
   | Opcode.AND =>
-      let rdBits := (word >>> 10) &&& 0b111
-      let rs1Bits := (word >>> 7) &&& 0b111
-      let rs2Bits := (word >>> 4) &&& 0b111
-      let rd : Fin 8 := ⟨rdBits.toNat, by omega⟩
-      let rs1 : Fin 8 := ⟨rs1Bits.toNat, by omega⟩
-      let rs2 : Fin 8 := ⟨rs2Bits.toNat, by omega⟩
+      let rdBits := (word >>> 10).truncate 3
+      let rs1Bits := (word >>> 7).truncate 3
+      let rs2Bits := (word >>> 4).truncate 3
+      let rd : RegId := ⟨rdBits.toNat, by omega⟩
+      let rs1 : RegId := ⟨rs1Bits.toNat, by omega⟩
+      let rs2 : RegId := ⟨rs2Bits.toNat, by omega⟩
       some (AND rd rs1 rs2)
 
   | Opcode.LD =>
       -- Extract fields: [opc(3)] [rd(3)] [rs1(3)] [pad(7)]
-      let rdBits := (word >>> 10) &&& 0b111
-      let rs1Bits := (word >>> 7) &&& 0b111
-      let rd : Fin 8 := ⟨rdBits.toNat, by omega⟩
-      let rs1 : Fin 8 := ⟨rs1Bits.toNat, by omega⟩
+      let rdBits := (word >>> 10).truncate 3
+      let rs1Bits := (word >>> 7).truncate 3
+      let rd : RegId := ⟨rdBits.toNat, by omega⟩
+      let rs1 : RegId := ⟨rs1Bits.toNat, by omega⟩
       some (LD rd rs1)
 
   | Opcode.ST =>
-      let rs1Bits := (word >>> 10) &&& 0b111
-      let rs2Bits := (word >>> 7) &&& 0b111
-      let rs1 : Fin 8 := ⟨rs1Bits.toNat, by omega⟩
-      let rs2 : Fin 8 := ⟨rs2Bits.toNat, by omega⟩
+      let rs1Bits := (word >>> 10).truncate 3
+      let rs2Bits := (word >>> 7).truncate 3
+      let rs1 : RegId := ⟨rs1Bits.toNat, by omega⟩
+      let rs2 : RegId := ⟨rs2Bits.toNat, by omega⟩
       some (ST rs1 rs2)
 
   | Opcode.BEQ =>
       -- Extract fields: [opc(3)] [rs1(3)] [rs2(3)] [offset(7)]
-      let rs1Bits := (word >>> 10) &&& 0b111
-      let rs2Bits := (word >>> 7) &&& 0b111
-      let offsetBits := word &&& 0x7F
-      let rs1 : Fin 8 := ⟨rs1Bits.toNat, by omega⟩
-      let rs2 : Fin 8 := ⟨rs2Bits.toNat, by omega⟩
-      some (BEQ rs1 rs2 (offsetBits.truncate 7))
+      let rs1Bits := (word >>> 10).truncate 3
+      let rs2Bits := (word >>> 7).truncate 3
+      let offsetBits := word.truncate 7
+      let rs1 : RegId := ⟨rs1Bits.toNat, by omega⟩
+      let rs2 : RegId := ⟨rs2Bits.toNat, by omega⟩
+      some (BEQ rs1 rs2 offsetBits)
 
   | Opcode.JMP =>
       -- Extract fields: [opc(3)] [addr(13)]

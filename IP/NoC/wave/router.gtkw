@@ -1,0 +1,81 @@
+[*] GTKWave save file for the Sparkle NoC wormhole router testbench.
+[*] Loaded automatically by:  IP/NoC/wave/run.sh --view
+[*]
+[*] The story, top to bottom:
+[*]   Stimulus  — two sources, both offering flits, neither backing off.
+[*]   Injection — the flits ENTERING the router, decoded.  acceptA/acceptB
+[*]               are the handshakes firing: acceptB pulses five times
+[*]               while acceptA stays flat.  Both dest = (3,1), so XY
+[*]               routing sends both to the SAME output.  That is the
+[*]               collision the router has to resolve.
+[*]   East port — the contended output: Head,Body,Body,Body,Tail  TWICE,
+[*]               cleanly.  kind = 0/1/2 = Head/Body/Tail.  Payload tags
+[*]               0xb0.. then 0xa0.. — two contiguous runs, no mixing.
+[*]   Backpressure — inR0 held LOW for the five cycles B owns East, so
+[*]               idxA freezes at 0.  The loser waits; it is not corrupted.
+[*]
+[dumpfile] "router.vcd"
+[savefile] "router.gtkw"
+[timestart] 0
+[size] 1600 900
+[pos] -1 -1
+*-16.000000 0 -1 -1 -1 -1 -1 -1
+[treeopen] router_tb.
+[sst_width] 260
+[signals_width] 200
+[sst_expanded] 1
+[sst_vpaned_height] 300
+@28
+router_tb.clk
+@200
+-
+-Stimulus: both sources offering, from cycle 0
+@28
+router_tb.vA
+router_tb.vB
+@24
+router_tb.idxA[31:0]
+router_tb.idxB[31:0]
+@200
+-
+-Injection: packet A entering on North (dest 3,1 => East)
+@28
+router_tb.acceptA
+@24
+router_tb.aKind[1:0]
+@22
+router_tb.aPayload[31:0]
+@24
+router_tb.aDestX[3:0]
+router_tb.aDestY[3:0]
+@200
+-
+-Injection: packet B entering on South (dest 3,1 => East, same port!)
+@28
+router_tb.acceptB
+@24
+router_tb.bKind[1:0]
+@22
+router_tb.bPayload[31:0]
+@24
+router_tb.bDestX[3:0]
+router_tb.bDestY[3:0]
+@200
+-
+-East output (port 2): the contended port
+@28
+router_tb.outV2
+@24
+router_tb.eastKind[1:0]
+@22
+router_tb.eastPayload[31:0]
+@200
+-
+-Backpressure: the loser stalls, it does not corrupt
+@28
+router_tb.inR0
+router_tb.inR1
+@200
+-
+[pattern_trace] 1
+[pattern_trace] 0

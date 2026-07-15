@@ -203,6 +203,18 @@ lean_lib «IP.YOLOv8» where
 lean_lib «IP.Arbiter» where
   roots := #[`IP.Arbiter]
 
+-- Network-on-Chip: 5-port wormhole router for a 2-D mesh, XY routing.
+-- Pure spec + proofs (delivery, deadlock-freedom) under IP/NoC/.
+lean_lib «IP.NoC» where
+  roots := #[`IP.NoC]
+
+-- Checks the Signal DSL router blocks against the proven pure specs:
+-- exhaustive (160/160) combinational equivalence for the 5-client
+-- round-robin arbiter, plus sequential, crossbar and fairness checks.
+lean_exe «noc-test» where
+  root := `IP.NoC.SimTest
+  supportInterpreter := true
+
 lean_lib «Examples.CDC» where
   roots := #[`Examples.CDC]
 
